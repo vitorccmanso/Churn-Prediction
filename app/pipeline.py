@@ -8,11 +8,8 @@ class PredictPipeline:
 
     Methods:
     - __init__: Initializes the PredictPipeline object by loading the mappings, preprocessor, and model from .pkl files
-    - preprocess_dataset: Processes the input dataset, ensuring it contains the required columns
     - preprocess_data: Preprocesses the input data, including feature engineering and transformation
-    - get_feature_names: Retrieves the feature names after preprocessing is applied
     - predict: Predicts client chrun
-    - results_df: Saves predictions to a CSV file and returns a list of dictionaries for HTML rendering
     """
     def __init__(self):
         """
@@ -27,7 +24,7 @@ class PredictPipeline:
 
     def preprocess_data(self, input_data):
         """
-        Processes the input dataset, ensuring it contains the required columns
+        Preprocesses the input data, including feature engineering and transformation
 
         Parameters:
         - input_data (pandas.DataFrame): The input data to be processed
@@ -57,9 +54,11 @@ class PredictPipeline:
 
         Parameters:
         - data: The input data for prediction
+        - path (str): The file path to save the CSV file
+        - manual_data: Indicates whether it is a dataset prediction or a manual data input prediction
 
         Returns:
-        - list: The predicted chances of a client defaulting
+        - The predicted chances of a client defaulting
         """
         preds_proba = self.model.predict_proba(self.preprocess_data(data))[:,1]
         preds = (preds_proba >= 0.3).astype(int)
