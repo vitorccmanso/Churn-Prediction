@@ -143,11 +143,11 @@ Almost all of these points were already found during the EDA, and are now proven
 
 Also, by using the `force_plot` function, it was possible to see how the features impacted specific predictions:
 
-![shap_force_10%](images/shap_force_10%.png)
+![shap_force_10%](images/shap_force_10.png)
 
 For this client, the model said that there's only a 10% chance of churn. This result is based on features values and its impact. `NumOfProducts_2` was the most important feature here, showing that this client owns two products. Also, the client has no balance, is middle-aged, is a man and is an active member. All of this is in line with findings from the EDA and from the summary graph on how the features impact the models decision.
 
-![shap_force_90%](images/shap_force_90%.png)
+![shap_force_90%](images/shap_force_90.png)
 
 For this client, there's a 96% chance of churn. The client is very old, is not an active member and doesn't own two products, with the only thing preventing this from being a 100% chance of churn being the fact that the client is a man, the gender who tends to stay with the institution.
 
