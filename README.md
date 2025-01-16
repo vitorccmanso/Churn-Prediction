@@ -2,6 +2,9 @@
 
 ![project header](images/header.png)
 
+## Pipeline
+The file `ML Pipeline.py` needs to be used in the same directory where the folder `artifacts` is. This script will prompt a file explorer window for the user to choose the dataset, will import the preprocessor and model from the artifacts folder and create a dataset called `results.csv` in this same directory.
+
 ## Dataset
 The dataset for this project was given by Incidium, and is about client data and if they exited the financial institution or not.
 It consists of 10000 rows with 13 columns:
