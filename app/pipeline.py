@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 import pickle
 
 class PredictPipeline:
@@ -7,7 +6,7 @@ class PredictPipeline:
     A class for predicting client chrun using a pre-trained model and preprocessing pipeline.
 
     Methods:
-    - __init__: Initializes the PredictPipeline object by loading the mappings, preprocessor, and model from .pkl files
+    - __init__: Initializes the PredictPipeline object by loading the preprocessor and model from .pkl files
     - preprocess_data: Preprocesses the input data, including feature engineering and transformation
     - predict: Predicts client chrun
     """
@@ -15,11 +14,9 @@ class PredictPipeline:
         """
         Initializes the PredictPipeline object by loading the preprocessor and model from .pkl files
         """
-        preprocessor_path = "app/artifacts/preprocessor.pkl"
-        with open(preprocessor_path, "rb") as f:
+        with open("app/artifacts/preprocessor.pkl", "rb") as f:
             self.preprocessor = pickle.load(f)
-        model_path = "app/artifacts/model.pkl"
-        with open(model_path, "rb") as f:
+        with open("app/artifacts/model.pkl", "rb") as f:
             self.model = pickle.load(f)
 
     def preprocess_data(self, input_data):
@@ -37,16 +34,15 @@ class PredictPipeline:
         if not set(columns).issubset(input_data.columns):
             raise ValueError("Dataset must contain all the columns listed above")
         input_data = input_data[columns]
-        if input_data["NumOfProducts"].dtype in [int, float]:
+        if input_data["NumOfProducts"].dtype not in ["object", "categorical", str]:
             input_data["NumOfProducts"] = input_data["NumOfProducts"].apply(lambda x: "3 or more" if x >= 3 else str(x))
         one_hot_cols = input_data.select_dtypes(include="object").columns
 
         # Apply preprocessor object to input_data
         input_data = self.preprocessor.transform(input_data)
         one_hot_features = list(self.preprocessor.named_transformers_["cat_onehot"]["onehot"].get_feature_names_out(one_hot_cols))
-        feature_names = ["Balance"] + ["Age"] + ["HasCrCard", "IsActiveMember"] + one_hot_features
-        new_data = pd.DataFrame(input_data, columns=feature_names)
-        return new_data
+        feature_names = ["Balance", "Age", "HasCrCard", "IsActiveMember"] + one_hot_features
+        return pd.DataFrame(input_data, columns=feature_names)
 
     def predict(self, data, path, manual_data=False):
         """
@@ -66,10 +62,7 @@ class PredictPipeline:
             prediction_classes = ["No Churn", "Churn"]
             predicted_class = prediction_classes[preds[0]]
             return predicted_class
-        results_df = pd.DataFrame({
-            "rowNumber": data["RowNumber"],
-            "predictedValues": preds
-        })
+        results_df = pd.DataFrame({"rowNumber": data["RowNumber"], "predictedValues": preds})
         # Save results to a temporary CSV file and convert DataFrame to a list of dictionaries for rendering in HTML
         results_df.to_csv(path, index=False)
         results = results_df.to_dict(orient="records")
