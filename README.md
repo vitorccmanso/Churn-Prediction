@@ -194,10 +194,10 @@ Open a web browser page and type `localhost` in the search bar. The app should l
 ## Running locally trough uvicorn (this assumes that you have python installed)
 ### Step 1: Install libraries
 
-Clone or download this repository, then go to the app folder of the project (where requirements_app.txt is). Open a command prompt in this folder and run this command:
+Clone or download this repository, then go to the main folder of the project (where environment.yml is). Open a command prompt in this folder and run this command:
 
 ```shell
-pip install -r requirements_app.txt
+pip install -r ./app/requirements_app.txt
 ```
 
 ### Step 2: Run the app
